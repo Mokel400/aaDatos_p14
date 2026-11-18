@@ -1,5 +1,6 @@
 package es.fplumara.dam.ad.p14;
 
+import es.fplumara.dam.ad.p14.retos.Azul;
 import es.fplumara.dam.ad.p14.servicio.Taquilla;
 import es.fplumara.dam.ad.p14.util.Conexion;
 
@@ -9,9 +10,12 @@ import java.sql.SQLException;
 
 public class Principal {
 
+    private Connection conexion;
+
     public static void main(String[] args) {
         try (Connection conexion = Conexion.abrir()) {
             Taquilla taquilla = new Taquilla(conexion);
+            Azul azul = new Azul();
 
             // Paso 1
             System.out.println("Autocommit activado: " + conexion.getAutoCommit());
@@ -49,7 +53,14 @@ public class Principal {
             taquilla.comprarAbono(4, abono, 2);
             taquilla.mostrarEstado(4, 3);
 
-        } catch (IOException | SQLException e) {
+            //Reto azul
+            System.out.println();
+            azul.comprarConGastos(5, 1, 1, false, taquilla);
+            System.out.println("Compra realizada correctamente");
+            azul.comprarConGastos(6, 8, 1, true, taquilla);
+            System.out.println("Compra con fallo simulado");
+
+        } catch (IOException | SQLException | ClassNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }

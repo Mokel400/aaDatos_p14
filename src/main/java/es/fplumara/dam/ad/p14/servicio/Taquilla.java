@@ -103,9 +103,7 @@ public class Taquilla {
      * Paso 3
      * Compra dentro de una transacción: o se guardan las tres sentencias o ninguna
      */
-    public void comprar(int idCliente, int idConcierto, int cantidad, boolean
-            simularFallo)
-            throws SQLException {
+    public void comprar(int idCliente, int idConcierto, int cantidad, boolean simularFallo) throws SQLException {
         conexion.setAutoCommit(false);
         try {
             BigDecimal importe = obtenerPrecio(idConcierto).multiply(new
@@ -117,12 +115,10 @@ public class Taquilla {
             restarEntradas(idConcierto, cantidad);
             registrarVenta(idCliente, idConcierto, cantidad, importe);
             conexion.commit();
-            System.out.println("Compra confirmada: " + cantidad + " entradas por " +
-                    importe + " €");
+            System.out.println("Compra confirmada: " + cantidad + " entradas por " + importe + " €");
         } catch (SQLException e) {
             conexion.rollback();
-            System.out.println("Compra cancelada, se deshacen los cambios: " +
-                    e.getMessage());
+            System.out.println("Compra cancelada, se deshacen los cambios: " + e.getMessage());
         } finally {
             conexion.setAutoCommit(true);
         }
@@ -135,8 +131,7 @@ public class Taquilla {
      * se deshace solo esa línea y se sigue con los demás
      */
 
-    public void comprarAbono(int idCliente, int[] idsConciertos, int cantidad) throws
-            SQLException {
+    public void comprarAbono(int idCliente, int[] idsConciertos, int cantidad) throws SQLException {
         conexion.setAutoCommit(false);
         int compradas = 0;
         try {
@@ -150,21 +145,17 @@ public class Taquilla {
                     restarEntradas(idConcierto, cantidad);
                     registrarVenta(idCliente, idConcierto, cantidad, importe);
                     compradas++;
-                    System.out.println("Concierto " + idConcierto + ": " + cantidad
-                            + " entradas por " + importe + " €");
+                    System.out.println("Concierto " + idConcierto + ": " + cantidad + " entradas por " + importe + " €");
                 } catch (SQLException e) {
                     conexion.rollback(antesDeLaLinea);
-                    System.out.println("Concierto " + idConcierto + ": no se puede comprar ("
-                                    + e.getMessage() + ")");
+                    System.out.println("Concierto " + idConcierto + ": no se puede comprar (" + e.getMessage() + ")");
                 }
             }
             conexion.commit();
-            System.out.println("Abono confirmado: " + compradas + " de " +
-                    idsConciertos.length + " conciertos");
+            System.out.println("Abono confirmado: " + compradas + " de " + idsConciertos.length + " conciertos");
         } catch (SQLException e) {
             conexion.rollback();
-            System.out.println("Abono cancelado, se deshacen los cambios: " +
-                    e.getMessage());
+            System.out.println("Abono cancelado, se deshacen los cambios: " + e.getMessage());
         } finally {
             conexion.setAutoCommit(true);
         }
